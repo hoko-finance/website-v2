@@ -1,37 +1,41 @@
+<!-- 由 `bun run icons:gen` 从 apps/web/public/logo.svg 生成，别手改。
+     改标识改那个源文件，然后重新跑一次脚本（见 scripts/gen-icons.ts）。 -->
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0e0b1a"/>
-      <stop offset="1" stop-color="#07060d"/>
+      <!-- 比主题的 background 变量（#0c1014）明显亮一档：深色主题下底色和页面一样黑的话，
+           这枚方块就没有边界了。原先那圈描边干的是这件事，但它在 22px 上只是雾。 -->
+      <stop offset="0" stop-color="#181233"/>
+      <stop offset="1" stop-color="#0c0a18"/>
     </linearGradient>
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="6" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
   </defs>
 
-  <!-- full-bleed background (maskable safe) -->
+  <style>
+    @media (max-width: 40px) { .strike { display: none } }
+  </style>
+
   <rect width="512" height="512" fill="url(#bg)"/>
-  <rect x="8" y="8" width="496" height="496" rx="96" fill="none" stroke="#2a2147" stroke-width="4"/>
 
-  <!-- candlesticks: rising trend, content kept within central safe zone -->
-  <g filter="url(#glow)" stroke-linecap="round">
-    <!-- down candle (red) -->
-    <line x1="168" y1="300" x2="168" y2="380" stroke="#ff3b6b" stroke-width="10"/>
-    <rect x="152" y="318" width="32" height="48" rx="6" fill="#ff3b6b"/>
+  <!-- 画面内容统一装在 #art 里：生成 maskable 图标时脚本要把内容整体缩进安全区，
+       靠的就是给这个 g 挂 transform。新增元素请放进来，别挂到它外面。 -->
+  <g id="art">
+    <!-- 期权行权线，压在烛体下面。两个数字是算出来的不是凑的：
+         长度 380 = 6×(40+28)−28，正好落在第 6 段虚线的末尾，两端不会留半截短杠；
+         y 取 236 而不是画布正中 256，是为了避开红烛影线顶端(260)——两者相切时
+         圆头描边会和虚线粘成一个「T」，而 236 既压在绿/青烛体底下，又离影线有余量。 -->
+    <line class="strike" x1="66" y1="236" x2="446" y2="236" stroke="#ff2e88"
+          stroke-width="16" stroke-dasharray="40 28" opacity="0.85"/>
 
-    <!-- up candle (lime) -->
-    <line x1="256" y1="150" x2="256" y2="360" stroke="#b6ff3c" stroke-width="10"/>
-    <rect x="240" y="190" width="32" height="120" rx="6" fill="#b6ff3c"/>
+    <!-- 三根上行 K 线 -->
+    <g stroke-linecap="round">
+      <line x1="120" y1="260" x2="120" y2="432" stroke="#ff3b6b" stroke-width="22"/>
+      <rect x="80" y="296" width="80" height="104" rx="14" fill="#ff3b6b"/>
 
-    <!-- up candle (cyan) -->
-    <line x1="344" y1="120" x2="344" y2="300" stroke="#19f0ff" stroke-width="10"/>
-    <rect x="328" y="150" width="32" height="96" rx="6" fill="#19f0ff"/>
+      <line x1="256" y1="128" x2="256" y2="400" stroke="#b6ff3c" stroke-width="22"/>
+      <rect x="216" y="168" width="80" height="184" rx="14" fill="#b6ff3c"/>
+
+      <line x1="392" y1="80" x2="392" y2="300" stroke="#19f0ff" stroke-width="22"/>
+      <rect x="352" y="120" width="80" height="136" rx="14" fill="#19f0ff"/>
+    </g>
   </g>
-
-  <!-- magenta strike line (options) -->
-  <line x1="128" y1="252" x2="384" y2="252" stroke="#ff2e88" stroke-width="5" stroke-dasharray="14 12" opacity="0.9"/>
 </svg>
